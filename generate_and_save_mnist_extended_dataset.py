@@ -16,14 +16,33 @@ train_x, train_y, test_x, test_y = create_semantic_segmentation_dataset(num_trai
                                                                         image_shape=(64, 64),
                                                                         num_classes=5)
 
+
+test_y = test_y > 0
+train_y = train_y > 0
+
 train_x = train_x.astype(dtype = "float16")
 train_y = train_y.astype(dtype = "float16")
 test_x = test_x.astype(dtype = "float16")
 test_y = test_y.astype(dtype = "float16")
 
 import matplotlib.pyplot as plt 
+plt.close("all")
 
-plt.imshow(test_x[7,:,:,0])
+plt.imshow(test_x[10,:,:,0], cmap = "gray")
+plt.axis("off")
+
+
+fig, axs = plt.subplots(nrows = 1, ncols = 5)
+#fig.suptitle("Segmentierungsmasken")
+for label in range(5):
+  axs[label].imshow(test_y[10, :,:, label], cmap = "gray")
+  axs[label].set_title("Label " + str(label))
+  axs[label].axis("off")
+
+
+
+
+
 
 
 flag_save_data = False
@@ -32,9 +51,5 @@ all_data = (train_x, train_y, test_x, test_y)
 
 if flag_save_data == True:
     import pickle as pkl 
-    pkl.dump(train_x, open("train_x", "wb"))
-    pkl.dump(train_y, open("train_y", "wb"))
-    pkl.dump(test_x, open("test_x", "wb"))
-    pkl.dump(test_y, open("test_y", "wb"))
     pkl.dump(all_data, open("extended_mnist_train_test_data", "wb"))
     
